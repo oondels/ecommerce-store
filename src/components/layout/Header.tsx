@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Moon, Heart, ShoppingBag, Menu, Search, User, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import Button from '../ui/Button';
+import './Header.css'; // Importando o arquivo CSS personalizado
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,12 +42,12 @@ const Header: React.FC = () => {
   // Header background style based on scroll position and current page
   const headerBgClass = isScrolled || !isHomePage
     ? 'bg-white shadow-subtle'
-    : 'bg-transparent';
+    : 'shadow-subtle';
 
   // Text color based on scroll position and current page
   const textColorClass = isScrolled || !isHomePage
     ? 'text-secondary-900'
-    : 'text-white';
+    : 'text-secondary-900';
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -66,7 +67,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${headerBgClass}`}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 shadow ${headerBgClass}`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -94,7 +95,7 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Desktop Right Icons */}
-          <div className="hidden md:flex items-center space-x-5">
+          <div className="desktop-icons-container items-center space-x-5">
             <button
               onClick={toggleSearch}
               className={`${textColorClass} hover:text-primary-500 transition-colors`}
@@ -121,6 +122,21 @@ const Header: React.FC = () => {
                 </span>
               )}
             </Link>
+            <div className="flex items-center space-x-3">
+              <Link
+                to="/login"
+                className={`${textColorClass} hover:text-primary-500 transition-colors text-sm font-medium`}
+              >
+                Entrar
+              </Link>
+              <span className="text-gray-300">|</span>
+              <Link
+                to="/register"
+                className={`${textColorClass} hover:text-primary-500 transition-colors text-sm font-medium`}
+              >
+                Cadastrar
+              </Link>
+            </div>
             <Link
               to="/account"
               className={`${textColorClass} hover:text-primary-500 transition-colors`}
@@ -253,10 +269,17 @@ const Header: React.FC = () => {
             </li>
           </ul>
           
-          <div className="mt-8">
-            <Button variant="primary" fullWidth>
-              Entrar
-            </Button>
+          <div className="mt-8 space-y-4">
+            <Link to="/login">
+              <Button variant="primary" fullWidth>
+                Entrar
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="outline" fullWidth>
+                Cadastrar
+              </Button>
+            </Link>
           </div>
         </nav>
       </div>

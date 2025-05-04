@@ -1,0 +1,15 @@
+.desktop-icons-container {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-icons-container {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktop-icons-container {
+    display: none !important;
+  }
+}

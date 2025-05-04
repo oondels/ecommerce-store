@@ -294,10 +294,11 @@ export const products: Product[] = [
     description: 'Create a calming atmosphere with our set of three hand-poured soy candles. Each candle is crafted with 100% natural soy wax, cotton wicks, and premium essential oils for a clean, long-lasting burn. The set includes three signature scents: Calm Lavender, Fresh Eucalyptus, and Warm Vanilla, perfect for creating different moods throughout your home.',
     shortDescription: 'Set of three hand-poured, essential oil-infused soy candles',
     images: [
-      'https://images.pexels.com/photos/4695296/pexels-photo-4695296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      'https://images.pexels.com/photos/7183572/pexels-photo-7183572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      'https://images.pexels.com/photos/5238610/pexels-photo-5238610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    ],
+      'https://images.pexels.com/photos/6078123/pexels-photo-6078123.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', // Pessoa usando smartphone
+      'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', // Celular sobre mesa com acessórios
+      'https://images.pexels.com/photos/4386448/pexels-photo-4386448.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', // Celular em close no escuro
+    ]
+,    
     category: 'Decor',
     tags: ['candles', 'home', 'scented', 'relaxation'],
     rating: 4.9,
