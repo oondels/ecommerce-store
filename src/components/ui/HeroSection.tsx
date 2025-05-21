@@ -14,7 +14,6 @@ interface HeroSectionProps {
     text: string;
     link: string;
   };
-  overlayOpacity?: number;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
@@ -23,36 +22,31 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   backgroundImage,
   primaryCta,
   secondaryCta,
-  overlayOpacity = 0.5,
 }) => {
   return (
     <div className="relative min-h-[80vh] flex items-center">
-      {/* Background image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center z-0"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        {/* Overlay */}
-        <div 
-          className="absolute inset-0 bg-secondary-900"
-          style={{ opacity: overlayOpacity }}
-        ></div>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
       </div>
       
-      <div className="container mx-auto px-4 relative z-10 py-16">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
             {title}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-8">
+          <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
             {subtitle}
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <Button
               variant="primary"
               size="lg"
-              rightIcon={<ArrowRight size={18} />}
+              rightIcon={<ArrowRight size={20} />}
               onClick={() => window.location.href = primaryCta.link}
+              className="min-w-[200px]"
             >
               {primaryCta.text}
             </Button>
@@ -61,7 +55,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white text-white hover:bg-white hover:text-secondary-900"
+                className="min-w-[200px] border-white text-white hover:bg-white hover:text-black"
                 onClick={() => window.location.href = secondaryCta.link}
               >
                 {secondaryCta.text}
