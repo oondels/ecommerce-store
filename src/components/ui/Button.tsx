@@ -24,34 +24,34 @@ const Button: React.FC<ButtonProps> = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'primary':
-        return 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500';
+        return 'bg-black text-white hover:bg-gray-900 focus:ring-gray-500';
       case 'secondary':
-        return 'bg-secondary-900 text-white hover:bg-secondary-800 focus:ring-secondary-800';
+        return 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500';
       case 'outline':
-        return 'bg-transparent border border-primary-500 text-primary-500 hover:bg-primary-50 focus:ring-primary-500';
+        return 'bg-transparent border-2 border-black text-black hover:bg-black hover:text-white focus:ring-black';
       case 'ghost':
-        return 'bg-transparent text-secondary-900 hover:bg-gray-100 focus:ring-secondary-500';
+        return 'bg-transparent text-gray-900 hover:bg-gray-100 focus:ring-gray-500';
       case 'link':
-        return 'bg-transparent text-primary-500 hover:underline focus:ring-primary-500 p-0';
+        return 'bg-transparent text-black hover:underline focus:ring-black p-0';
       default:
-        return 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500';
+        return 'bg-black text-white hover:bg-gray-900 focus:ring-gray-500';
     }
   };
 
   const getSizeClasses = () => {
     switch (size) {
       case 'sm':
-        return 'text-xs py-1 px-3';
+        return 'text-sm py-2 px-4';
       case 'md':
-        return 'text-sm py-2 px-4';
-      case 'lg':
         return 'text-base py-3 px-6';
+      case 'lg':
+        return 'text-lg py-4 px-8';
       default:
-        return 'text-sm py-2 px-4';
+        return 'text-base py-3 px-6';
     }
   };
 
-  const baseClasses = 'font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center';
+  const baseClasses = 'font-medium rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 inline-flex items-center justify-center';
   const widthClass = fullWidth ? 'w-full' : '';
   const disabledClass = disabled || isLoading ? 'opacity-60 cursor-not-allowed' : '';
 

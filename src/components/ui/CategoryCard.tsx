@@ -12,7 +12,6 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   category,
   variant = 'circle',
 }) => {
-  // Dynamically get the Lucide icon if it exists
   const IconComponent = (LucideIcons as Record<string, React.FC<{ size?: number }>>)[
     category.icon.charAt(0).toUpperCase() + category.icon.slice(1)
   ] || LucideIcons.Tag;
@@ -21,16 +20,16 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
     <Link
       to={`/products?category=${category.slug}`}
       className={`group flex flex-col items-center ${
-        variant === 'circle' ? 'space-y-3' : 'space-y-2'
+        variant === 'circle' ? 'space-y-4' : 'space-y-3'
       }`}
     >
       <div
         className={`
-          relative overflow-hidden bg-white flex items-center justify-center shadow-subtle transition-all duration-300 group-hover:shadow-card
+          relative overflow-hidden bg-white flex items-center justify-center transition-all duration-300 group-hover:shadow-xl
           ${
             variant === 'circle'
-              ? 'rounded-full w-20 h-20 sm:w-24 sm:h-24'
-              : 'rounded-lg w-24 h-24 sm:w-32 sm:h-32'
+              ? 'rounded-full w-24 h-24 sm:w-32 sm:h-32'
+              : 'rounded-2xl w-full aspect-square'
           }
         `}
       >
@@ -38,42 +37,36 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
           <img
             src={category.image}
             alt={category.name}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         )}
         <div
           className={`
             flex items-center justify-center ${
               variant === 'square'
-                ? 'absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300'
-                : 'bg-gray-100 w-full h-full group-hover:bg-primary-50 transition-colors duration-300'
+                ? 'absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-300'
+                : 'bg-gray-50 w-full h-full group-hover:bg-gray-100 transition-colors duration-300'
             }
           `}
         >
           <IconComponent
-            size={24}
-            className={`
-              ${
-                variant === 'square'
-                  ? 'text-white'
-                  : 'text-primary-500'
-              }
-            `}
+            size={32}
+            className={variant === 'square' ? 'text-white' : 'text-gray-900'}
           />
         </div>
       </div>
-      <span
-        className={`text-sm font-medium text-center ${
-          variant === 'square' ? 'text-secondary-900' : 'text-secondary-700'
-        }`}
-      >
-        {category.name}
-      </span>
-      {variant === 'square' && (
-        <span className="text-xs text-gray-500">
-          {category.productsCount} {category.productsCount === 1 ? 'product' : 'products'}
-        </span>
-      )}
+      <div className="text-center">
+        <h3 className={`font-medium ${
+          variant === 'square' ? 'text-lg text-white' : 'text-gray-900'
+        }`}>
+          {category.name}
+        </h3>
+        {variant === 'square' && (
+          <p className="text-sm text-gray-200 mt-1">
+            {category.productsCount} {category.productsCount === 1 ? 'product' : 'products'}
+          </p>
+        )}
+      </div>
     </Link>
   );
 };
