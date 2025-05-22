@@ -1,149 +1,224 @@
 import React from 'react';
-import HeroSection from '../components/ui/HeroSection';
-import CategoryCard from '../components/ui/CategoryCard';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ShoppingBag, Truck, Shield, Clock } from 'lucide-react';
+import Button from '../components/ui/Button';
 import ProductCard from '../components/ui/ProductCard';
 import NewsletterForm from '../components/ui/NewsletterForm';
-import { categories } from '../data/mockData';
 import { getFeaturedProducts, getTrendingProducts } from '../data/mockData';
-import { ArrowRight } from 'lucide-react';
-import Button from '../components/ui/Button';
 
 const Home: React.FC = () => {
-  const featuredProducts = getFeaturedProducts();
-  const trendingProducts = getTrendingProducts();
-  
+  const featuredProducts = getFeaturedProducts().slice(0, 4);
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      role: "Fashion Enthusiast",
+      image: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150",
+      content: "The quality of their products is exceptional. Every piece I've purchased has exceeded my expectations!"
+    },
+    {
+      name: "Michael Chen",
+      role: "Tech Professional",
+      image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150",
+      content: "Fast shipping and amazing customer service. They truly care about their customers' satisfaction."
+    },
+    {
+      name: "Emily Rodriguez",
+      role: "Interior Designer",
+      image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150",
+      content: "Their attention to detail and unique designs make them stand out. A go-to destination for quality products."
+    }
+  ];
+
+  const benefits = [
+    {
+      icon: <ShoppingBag className="w-6 h-6" />,
+      title: "Premium Selection",
+      description: "Carefully curated products that combine style, quality, and innovation"
+    },
+    {
+      icon: <Truck className="w-6 h-6" />,
+      title: "Fast & Free Shipping",
+      description: "Free shipping on orders over $100, delivered right to your doorstep"
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Secure Shopping",
+      description: "Your data is protected with industry-leading encryption"
+    },
+    {
+      icon: <Clock className="w-6 h-6" />,
+      title: "24/7 Support",
+      description: "Our dedicated team is here to help you anytime you need"
+    }
+  ];
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSection
-        title="Discover Your Style"
-        subtitle="Curated collections of premium products designed to elevate your everyday life"
-        backgroundImage="https://images.pexels.com/photos/6567607/pexels-photo-6567607.jpeg?auto=compress&cs=tinysrgb&w=1920"
-        primaryCta={{ text: "Shop Now", link: "/products" }}
-        secondaryCta={{ text: "Explore Collections", link: "/products?trending=true" }}
-      />
-      
-      {/* Categories */}
-      <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Shop by Category
-              </h2>
-              <p className="text-gray-600 text-lg">
-                Explore our curated collections
-              </p>
+      <section className="relative h-screen flex items-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.pexels.com/photos/6567607/pexels-photo-6567607.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt="Hero background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-2xl">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Discover Your Perfect Style
+            </h1>
+            <p className="text-xl text-gray-200 mb-8">
+              Explore our curated collection of premium products designed to elevate your lifestyle. Quality meets style in every piece.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button
+                variant="primary"
+                size="lg"
+                rightIcon={<ArrowRight size={20} />}
+                onClick={() => window.location.href = '/products'}
+              >
+                Shop Now
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-white text-white hover:bg-white hover:text-black"
+                onClick={() => window.location.href = '/about'}
+              >
+                Learn More
+              </Button>
             </div>
-            <Button
-              variant="link"
-              rightIcon={<ArrowRight size={16} />}
-              onClick={() => window.location.href = '/products'}
-            >
-              View All
-            </Button>
           </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} variant="circle" />
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-soft">
+                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {benefit.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
-      
+
       {/* Featured Products */}
-      <section className="py-24">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Featured Products
-              </h2>
-              <p className="text-gray-600 text-lg">
-                Handpicked items we think you'll love
-              </p>
-            </div>
-            <Button
-              variant="link"
-              rightIcon={<ArrowRight size={16} />}
-              onClick={() => window.location.href = '/products?featured=true'}
-            >
-              View All
-            </Button>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Featured Products
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Discover our handpicked selection of premium products, each chosen for its exceptional quality and unique design.
+            </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {featuredProducts.slice(0, 4).map((product) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        </div>
-      </section>
-      
-      {/* Banner */}
-      <section className="py-32 bg-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center opacity-50" style={{ backgroundImage: `url(https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=1920)` }}></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Elevate Your Space
-            </h2>
-            <p className="text-xl text-gray-200 mb-8">
-              Discover our premium collection of home decor that combines style, comfort, and innovation.
-            </p>
+          
+          <div className="text-center mt-12">
             <Button
               variant="outline"
               size="lg"
-              className="min-w-[200px] border-white text-white hover:bg-white hover:text-black"
-              onClick={() => window.location.href = '/products?category=decor'}
+              rightIcon={<ArrowRight size={20} />}
+              onClick={() => window.location.href = '/products'}
             >
-              Shop Home Decor
+              View All Products
             </Button>
           </div>
         </div>
       </section>
-      
-      {/* Trending Products */}
-      <section className="py-24">
+
+      {/* Testimonials */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-12">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Trending Now
-              </h2>
-              <p className="text-gray-600 text-lg">
-                Popular products our customers love
-              </p>
-            </div>
-            <Button
-              variant="link"
-              rightIcon={<ArrowRight size={16} />}
-              onClick={() => window.location.href = '/products?trending=true'}
-            >
-              View All
-            </Button>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              What Our Customers Say
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Don't just take our word for it. Here's what our satisfied customers have to say about their experience.
+            </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {trendingProducts.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-soft">
+                <div className="flex items-center mb-4">
+                  <img
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="ml-4">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                      {testimonial.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300">
+                  "{testimonial.content}"
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
-      
-      {/* Newsletter */}
-      <section className="py-24 bg-gray-50">
+
+      {/* Newsletter Section */}
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Stay Updated
             </h2>
-            <p className="text-gray-600 text-lg mb-8">
-              Subscribe to get updates on new products, special offers, and more.
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
+              Subscribe to our newsletter to receive updates on new products, special offers, and lifestyle tips.
             </p>
             <NewsletterForm />
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Need Help?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
+              Our dedicated support team is here to assist you with any questions or concerns.
+            </p>
+            <div className="flex justify-center">
+              <Link
+                to="/contact"
+                className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+              >
+                Contact Us <ArrowRight size={16} className="ml-2" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
