@@ -16,24 +16,23 @@ const Home: React.FC = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <HeroSection
-        title="Descubra Tudo em Um Só Lugar"
-        subtitle="Produtos cuidadosamente selecionados que combinam beleza, funcionalidade e inovação para seu estilo de vida moderno."
-        backgroundImage="https://images.pexels.com/photos/3965545/pexels-photo-3965545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-        primaryCta={{ text: "Explorar Coleções", link: "/products" }}
-        secondaryCta={{ text: "Ver Tendências", link: "/products?trending=true" }}
-        overlayOpacity={0.6}
+        title="Discover Your Style"
+        subtitle="Curated collections of premium products designed to elevate your everyday life"
+        backgroundImage="https://images.pexels.com/photos/6567607/pexels-photo-6567607.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        primaryCta={{ text: "Shop Now", link: "/products" }}
+        secondaryCta={{ text: "Explore Collections", link: "/products?trending=true" }}
       />
       
       {/* Categories */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-8">
+          <div className="flex justify-between items-baseline mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-2">
-                Compre por Categoria
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Shop by Category
               </h2>
-              <p className="text-secondary-600">
-                Explore nossas coleções selecionadas em diversas categorias
+              <p className="text-gray-600 text-lg">
+                Explore our curated collections
               </p>
             </div>
             <Button
@@ -41,11 +40,11 @@ const Home: React.FC = () => {
               rightIcon={<ArrowRight size={16} />}
               onClick={() => window.location.href = '/products'}
             >
-              Ver Todos
+              View All
             </Button>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
             {categories.map((category) => (
               <CategoryCard key={category.id} category={category} variant="circle" />
             ))}
@@ -54,15 +53,15 @@ const Home: React.FC = () => {
       </section>
       
       {/* Featured Products */}
-      <section className="py-16">
+      <section className="py-24">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-8">
+          <div className="flex justify-between items-baseline mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-2">
-                Produtos em Destaque
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Featured Products
               </h2>
-              <p className="text-secondary-600">
-                Produtos selecionados que achamos que você vai adorar
+              <p className="text-gray-600 text-lg">
+                Handpicked items we think you'll love
               </p>
             </div>
             <Button
@@ -70,11 +69,11 @@ const Home: React.FC = () => {
               rightIcon={<ArrowRight size={16} />}
               onClick={() => window.location.href = '/products?featured=true'}
             >
-              Ver Todos
+              View All
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {featuredProducts.slice(0, 4).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -83,38 +82,38 @@ const Home: React.FC = () => {
       </section>
       
       {/* Banner */}
-      <section className="py-16 bg-primary-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: `url(https://images.pexels.com/photos/1037993/pexels-photo-1037993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)` }}></div>
+      <section className="py-32 bg-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center opacity-50" style={{ backgroundImage: `url(https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=1920)` }}></div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Eleve Seu Espaço
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Elevate Your Space
             </h2>
             <p className="text-xl text-gray-200 mb-8">
-              Descubra nossa coleção premium de decoração para casa que combina estilo, conforto e inovação.
+              Discover our premium collection of home decor that combines style, comfort, and innovation.
             </p>
             <Button
               variant="outline"
               size="lg"
-              className="border-white text-white hover:bg-white hover:text-primary-900"
+              className="min-w-[200px] border-white text-white hover:bg-white hover:text-black"
               onClick={() => window.location.href = '/products?category=decor'}
             >
-              Comprar Decoração
+              Shop Home Decor
             </Button>
           </div>
         </div>
       </section>
       
       {/* Trending Products */}
-      <section className="py-16">
+      <section className="py-24">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-baseline mb-8">
+          <div className="flex justify-between items-baseline mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-2">
-                Tendências do Momento
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Trending Now
               </h2>
-              <p className="text-secondary-600">
-                Os produtos mais populares que nossos clientes estão adorando
+              <p className="text-gray-600 text-lg">
+                Popular products our customers love
               </p>
             </div>
             <Button
@@ -122,11 +121,11 @@ const Home: React.FC = () => {
               rightIcon={<ArrowRight size={16} />}
               onClick={() => window.location.href = '/products?trending=true'}
             >
-              Ver Todos
+              View All
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {trendingProducts.slice(0, 4).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -134,39 +133,16 @@ const Home: React.FC = () => {
         </div>
       </section>
       
-      {/* Mission Statement */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-6">
-              Nossa Missão
-            </h2>
-            <p className="text-xl text-secondary-600 mb-8 leading-relaxed">
-              Na Loja, acreditamos que ótimos produtos podem elevar experiências cotidianas. Selecionamos itens que combinam beleza, funcionalidade e inovação para melhorar seu estilo de vida moderno. Cada produto em nossa coleção é cuidadosamente escolhido para garantir que atenda aos nossos altos padrões de design, qualidade e sustentabilidade.
-            </p>
-            <Button
-              variant="ghost"
-              size="lg"
-              onClick={() => window.location.href = '/about'}
-            >
-              Saiba Mais Sobre Nós
-            </Button>
-          </div>
-        </div>
-      </section>
-      
       {/* Newsletter */}
-      <section className="py-16 bg-white">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-lg mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-secondary-900 mb-4">
-                Fique Atualizado
-              </h2>
-              <p className="text-secondary-600">
-                Inscreva-se para receber atualizações sobre novos produtos, ofertas especiais e muito mais.
-              </p>
-            </div>
+          <div className="max-w-xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Stay Updated
+            </h2>
+            <p className="text-gray-600 text-lg mb-8">
+              Subscribe to get updates on new products, special offers, and more.
+            </p>
             <NewsletterForm />
           </div>
         </div>
