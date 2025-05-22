@@ -17,6 +17,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
@@ -55,6 +56,7 @@ function App() {
               <Route path="/products" element={<MainLayout><Products /></MainLayout>} />
               <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
               <Route path="/checkout" element={<MainLayout><Checkout /></MainLayout>} />
+              <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
               <Route path="/dash" element={<MainLayout><Dashboard /></MainLayout>} />
               <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
             </Routes>
