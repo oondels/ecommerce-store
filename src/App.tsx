@@ -27,7 +27,7 @@ import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen flex flex-col pt-16 md:pt-20">
+  <div className="min-h-screen flex flex-col pt-16 md:pt-20 bg-gray-50 dark:bg-gray-800">
     <Header />
     <div className="flex-grow">
       {children}
