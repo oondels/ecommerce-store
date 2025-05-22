@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, CreditCard, Wallet, Bank, Lock, Info } from 'lucide-react';
+import { ChevronLeft, CreditCard, Wallet, Ban as Bank, Lock, Info } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import Button from '../components/ui/Button';
 import { formatCurrency } from '../utils/formatCurrency';
