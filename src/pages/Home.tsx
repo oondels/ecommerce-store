@@ -10,22 +10,22 @@ const Home: React.FC = () => {
   const featuredProducts = getFeaturedProducts().slice(0, 4);
   const testimonials = [
     {
-      name: "Sarah Johnson",
-      role: "Fashion Enthusiast",
-      image: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150",
-      content: "The quality of their products is exceptional. Every piece I've purchased has exceeded my expectations!"
-    },
-    {
-      name: "Michael Chen",
-      role: "Tech Professional",
+      name: "Christopher Gomes",
+      role: "Advogado",
       image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150",
-      content: "Fast shipping and amazing customer service. They truly care about their customers' satisfaction."
+      content: "Excelente experiência de compra! A loja oferece produtos de alta qualidade e um atendimento excepcional. Recomendo fortemente para todos que buscam confiabilidade e excelência."
     },
     {
-      name: "Emily Rodriguez",
-      role: "Interior Designer",
-      image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150",
-      content: "Their attention to detail and unique designs make them stand out. A go-to destination for quality products."
+      name: "Hendrius Félix",
+      role: "Engenheiro de Software",
+      image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=150",
+      content: "Impressionado com a qualidade dos produtos! Cada item que comprei superou minhas expectativas. A atenção aos detalhes e o acabamento são realmente excepcionais."
+    },
+    {
+      name: "Thalisson Reis",
+      role: "Médico",
+      image: "https://images.pexels.com/photos/2379006/pexels-photo-2379006.jpeg?auto=compress&cs=tinysrgb&w=150",
+      content: "A segurança nas transações e a rapidez na entrega são incomparáveis. Recebi meus pedidos antes do prazo previsto e tudo chegou em perfeito estado. Definitivamente voltarei a comprar!"
     }
   ];
 
@@ -153,10 +153,10 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              What Our Customers Say
+              O que Nossos Clientes Dizem
             </h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Don't just take our word for it. Here's what our satisfied customers have to say about their experience.
+              Veja o que nossos clientes satisfeitos têm a dizer sobre sua experiência conosco.
             </p>
           </div>
           
