@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -104,6 +105,7 @@ const Header: React.FC = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
+            <ThemeToggle />
             <Link 
               to="/cart" 
               className="relative hover:text-black transition-colors"
