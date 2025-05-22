@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, QrCode, Ban as Bank, ChevronLeft, Copy, Shield, Clock } from 'lucide-react';
+import { ChevronLeft, CreditCard, QrCode, Ban as Bank, Lock, Info, Copy, Shield, Clock } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
 import { formatCurrency } from '../utils/formatCurrency';
@@ -57,7 +57,7 @@ const Payment: React.FC = () => {
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
+    const match = (matches && matches[0]) || '';
     const parts = [];
 
     for (let i = 0, len = match.length; i < len; i += 4) {
@@ -223,6 +223,13 @@ const Payment: React.FC = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           CVV
+                          <button
+                            type="button"
+                            className="ml-1 text-gray-400 hover:text-gray-500"
+                            title="The 3 or 4 digit security code on your card"
+                          >
+                            <Info className="w-4 h-4" />
+                          </button>
                         </label>
                         <input
                           type="text"
