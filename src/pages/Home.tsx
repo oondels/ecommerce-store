@@ -117,23 +117,23 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
             <div>
               <span className="text-sm font-medium text-primary-600 dark:text-primary-400 mb-2 block">
                 Handpicked Collection
               </span>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 Featured Products
               </h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-300 max-w-2xl">
+              <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
                 Discover our carefully selected premium products, each chosen for its exceptional quality and unique design.
               </p>
             </div>
             <Link
               to="/products"
-              className="inline-flex items-center text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 mt-4 md:mt-0"
+              className="inline-flex items-center text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 mt-4 md:mt-0 transition-colors"
             >
               View All Products
               <ArrowRight size={16} className="ml-2" />
@@ -188,7 +188,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -215,7 +215,7 @@ const Home: React.FC = () => {
             <div className="flex justify-center">
               <Link
                 to="/contact"
-                className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+                className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors"
               >
                 Contact Us <ArrowRight size={16} className="ml-2" />
               </Link>
