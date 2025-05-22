@@ -335,21 +335,23 @@ const Products: React.FC = () => {
           </div>
           
           {/* Mobile filters panel */}
-          <FiltersPanel
-            isOpen={isFiltersPanelOpen}
-            onClose={() => setIsFiltersPanelOpen(false)}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-            priceRange={priceRange}
-            onPriceRangeChange={setPriceRange}
-            showNew={showNew}
-            onShowNewChange={setShowNew}
-            showTrending={showTrending}
-            onShowTrendingChange={setShowTrending}
-            onApplyFilters={handleApplyFilters}
-            onClearFilters={handleClearFilters}
-            maxPrice={500}
-          />
+          {isFiltersPanelOpen && (
+            <FiltersPanel
+              isOpen={isFiltersPanelOpen}
+              onClose={() => setIsFiltersPanelOpen(false)}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              priceRange={priceRange}
+              onPriceRangeChange={setPriceRange}
+              showNew={showNew}
+              onShowNewChange={setShowNew}
+              showTrending={showTrending}
+              onShowTrendingChange={setShowTrending}
+              onApplyFilters={handleApplyFilters}
+              onClearFilters={handleClearFilters}
+              maxPrice={500}
+            />
+          )}
           
           {/* Product grid */}
           <div className="lg:w-3/4 xl:w-4/5">
