@@ -29,26 +29,49 @@ const Home: React.FC = () => {
     }
   ];
 
+  const categories = [
+    {
+      name: "Material Escolar",
+      image: "https://images.pexels.com/photos/6690924/pexels-photo-6690924.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      description: "Cadernos, canetas, mochilas e tudo para seus estudos"
+    },
+    {
+      name: "Tecnologia",
+      image: "https://images.pexels.com/photos/1841841/pexels-photo-1841841.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      description: "Gadgets, acessórios e equipamentos eletrônicos"
+    },
+    {
+      name: "Artesanato",
+      image: "https://images.pexels.com/photos/6814562/pexels-photo-6814562.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      description: "Materiais para crochê, tricô e trabalhos manuais"
+    },
+    {
+      name: "Escritório",
+      image: "https://images.pexels.com/photos/4792733/pexels-photo-4792733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      description: "Tudo para seu ambiente de trabalho"
+    }
+  ];
+
   const benefits = [
     {
       icon: <ShoppingBag className="w-6 h-6" />,
-      title: "Premium Selection",
-      description: "Carefully curated products that combine style, quality, and innovation"
+      title: "Variedade de Produtos",
+      description: "De material escolar a tecnologia, tudo em um só lugar"
     },
     {
       icon: <Truck className="w-6 h-6" />,
-      title: "Fast & Free Shipping",
-      description: "Free shipping on orders over $100, delivered right to your doorstep"
+      title: "Entrega Rápida",
+      description: "Frete grátis em compras acima de R$100"
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Secure Shopping",
-      description: "Your data is protected with industry-leading encryption"
+      title: "Compra Segura",
+      description: "Seus dados protegidos e pagamento seguro"
     },
     {
       icon: <Clock className="w-6 h-6" />,
-      title: "24/7 Support",
-      description: "Our dedicated team is here to help you anytime you need"
+      title: "Suporte 24/7",
+      description: "Atendimento disponível quando você precisar"
     }
   ];
 
@@ -58,20 +81,20 @@ const Home: React.FC = () => {
       <section className="relative h-screen flex items-center">
         <div className="absolute inset-0">
           <img
-            src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="https://images.pexels.com/photos/5632398/pexels-photo-5632398.jpeg?auto=compress&cs=tinysrgb&w=1920"
             alt="Hero background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Tudo para Seu Sucesso
+              Seu Destino para Todas as Necessidades
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              De materiais escolares a gadgets tecnológicos, encontre tudo o que você precisa para estudar, trabalhar e criar em um só lugar.
+              De materiais escolares a gadgets tecnológicos, artesanato a produtos para escritório. Encontre tudo o que precisa para estudar, trabalhar e criar em um só lugar.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
@@ -95,12 +118,48 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Benefits Section */}
+      {/* Categories Section */}
       <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Explore Nossas Categorias
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Descubra nossa ampla seleção de produtos em diferentes categorias
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <div key={index} className="relative group overflow-hidden rounded-2xl">
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 flex flex-col justify-end p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">{category.name}</h3>
+                  <p className="text-gray-200 text-sm mb-4">{category.description}</p>
+                  <Link
+                    to={`/products?category=${category.name.toLowerCase()}`}
+                    className="text-white text-sm font-medium hover:underline inline-flex items-center"
+                  >
+                    Explorar <ArrowRight size={16} className="ml-2" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-soft">
+              <div key={index} className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl">
                 <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
                   {benefit.icon}
                 </div>
@@ -117,25 +176,25 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
             <div>
               <span className="text-sm font-medium text-primary-600 dark:text-primary-400 mb-2 block">
-                Handpicked Collection
+                Produtos em Destaque
               </span>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Featured Products
+                Mais Vendidos
               </h2>
               <p className="text-gray-600 dark:text-gray-300 max-w-2xl">
-                Discover our carefully selected premium products, each chosen for its exceptional quality and unique design.
+                Conheça nossos produtos mais populares, selecionados com cuidado para você.
               </p>
             </div>
             <Link
               to="/products"
-              className="inline-flex items-center text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 mt-4 md:mt-0 transition-colors"
+              className="inline-flex items-center text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300 mt-4 md:mt-0"
             >
-              View All Products
+              Ver Todos os Produtos
               <ArrowRight size={16} className="ml-2" />
             </Link>
           </div>
@@ -149,7 +208,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -162,7 +221,7 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-soft">
+              <div key={index} className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl">
                 <div className="flex items-center mb-4">
                   <img
                     src={testimonial.image}
@@ -188,38 +247,16 @@ const Home: React.FC = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Stay Updated
+              Fique por Dentro
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-8">
-              Subscribe to our newsletter to receive updates on new products, special offers, and lifestyle tips.
+              Assine nossa newsletter para receber novidades, ofertas exclusivas e dicas úteis.
             </p>
             <NewsletterForm />
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Need Help?
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-8">
-              Our dedicated support team is here to assist you with any questions or concerns.
-            </p>
-            <div className="flex justify-center">
-              <Link
-                to="/contact"
-                className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium transition-colors"
-              >
-                Contact Us <ArrowRight size={16} className="ml-2" />
-              </Link>
-            </div>
           </div>
         </div>
       </section>
