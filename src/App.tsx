@@ -15,8 +15,10 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Cart from "./pages/Cart";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
 
 // Layout wrapper for including Header, Footer, BottomNav and FloatingMenu
 const MainLayout = ({ children }: { children: React.ReactNode }) => (
@@ -35,24 +37,27 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="orders" element={<Orders />} />
-              <Route path="customers" element={<Customers />} />
-              <Route path="staff" element={<Staff />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
-            <Route path="/" element={<MainLayout><Home /></MainLayout>} />
-            <Route path="/products" element={<MainLayout><Products /></MainLayout>} />
-            <Route path="/dash" element={<MainLayout><Dashboard /></MainLayout>} />
-            <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
-          </Routes>
-        </Router>
+        <WishlistProvider>
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="orders" element={<Orders />} />
+                <Route path="customers" element={<Customers />} />
+                <Route path="staff" element={<Staff />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+              <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+              <Route path="/products" element={<MainLayout><Products /></MainLayout>} />
+              <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
+              <Route path="/dash" element={<MainLayout><Dashboard /></MainLayout>} />
+              <Route path="/customers" element={<MainLayout><Customers /></MainLayout>} />
+            </Routes>
+          </Router>
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   );
