@@ -49,7 +49,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white dark:bg-gray-900 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white dark:bg-gray-950 ${
         isScrolled ? 'shadow-soft' : ''
       }`}
     >
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`w-full py-2 pl-10 pr-4 bg-gray-50 dark:bg-gray-800 border-2 rounded-full transition-all ${
+                className={`w-full py-2 pl-10 pr-4 bg-gray-50 dark:bg-gray-900 border-2 rounded-full transition-all ${
                   isSearchFocused
                     ? 'border-gray-900 dark:border-gray-100'
                     : 'border-transparent'
@@ -132,30 +132,30 @@ const Header: React.FC = () => {
               </button>
               
               {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg py-2 z-50">
                   {user ? (
                     <>
                       <Link
                         to="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Profile
                       </Link>
                       <Link
                         to="/orders"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Orders
                       </Link>
                       <Link
                         to="/settings"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Settings
                       </Link>
                       <button
                         onClick={logout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Logout
                       </button>
@@ -164,13 +164,13 @@ const Header: React.FC = () => {
                     <>
                       <Link
                         to="/login"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Login
                       </Link>
                       <Link
                         to="/register"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
                         Register
                       </Link>
@@ -199,7 +199,7 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 bg-white dark:bg-gray-900 z-40 transition-transform duration-300 md:hidden ${
+        className={`fixed inset-0 bg-white dark:bg-gray-950 z-40 transition-transform duration-300 md:hidden ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -211,7 +211,7 @@ const Header: React.FC = () => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full py-3 px-4 pl-10 bg-gray-50 dark:bg-gray-800 rounded-full"
+                className="w-full py-3 px-4 pl-10 bg-gray-50 dark:bg-gray-900 rounded-full"
               />
               <Search
                 size={20}
