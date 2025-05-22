@@ -59,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
   return (
     <Link 
       to={`/product/${product.id}`}
-      className={`group bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl ${cardClasses[size]}`}
+      className={`group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl ${cardClasses[size]}`}
     >
       <div className="relative">
         <div className={`overflow-hidden ${imageHeightClasses[size]}`}>
@@ -85,11 +85,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
         
         <button
           onClick={handleToggleWishlist}
-          className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-colors"
+          className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors"
         >
           <Heart
             size={18}
-            className={isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}
+            className={isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-400'}
           />
         </button>
       </div>
@@ -104,21 +104,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
           />
         </div>
 
-        <h3 className="font-medium text-gray-900 mb-1 line-clamp-1">
+        <h3 className="font-medium text-gray-900 dark:text-white mb-1 line-clamp-1">
           {product.name}
         </h3>
         
-        <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
           {product.shortDescription}
         </p>
         
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="text-lg font-semibold text-gray-900">
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">
               {formatCurrency(product.discountPrice || product.price)}
             </span>
             {product.discountPrice && (
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-sm text-gray-400 dark:text-gray-500 line-through">
                 {formatCurrency(product.price)}
               </span>
             )}
@@ -126,7 +126,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
           
           <button
             onClick={handleAddToCart}
-            className="flex items-center justify-center w-10 h-10 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+            className="flex items-center justify-center w-10 h-10 bg-black dark:bg-white text-white dark:text-black rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
             aria-label="Add to cart"
           >
             <ShoppingBag size={16} />
