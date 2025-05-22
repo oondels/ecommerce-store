@@ -191,14 +191,14 @@ const Products: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
       <div className="container mx-auto px-4 py-8">
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {getActiveCategoryName()}
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
             {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} available
           </p>
         </div>
@@ -218,10 +218,10 @@ const Products: React.FC = () => {
             
             <div className="hidden lg:flex items-center gap-2 flex-wrap">
               {selectedCategory && (
-                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded-full text-sm font-medium flex items-center">
                   Category: {getActiveCategoryName()}
                   <button
-                    className="ml-2 text-white hover:text-gray-200"
+                    className="ml-2 text-white dark:text-black hover:text-gray-200 dark:hover:text-gray-800"
                     onClick={() => {
                       setSelectedCategory('');
                       updateUrl();
@@ -233,10 +233,10 @@ const Products: React.FC = () => {
               )}
               
               {(priceRange[0] > 0 || priceRange[1] < 500) && (
-                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded-full text-sm font-medium flex items-center">
                   Price: ${priceRange[0]} - ${priceRange[1]}
                   <button
-                    className="ml-2 text-white hover:text-gray-200"
+                    className="ml-2 text-white dark:text-black hover:text-gray-200 dark:hover:text-gray-800"
                     onClick={() => {
                       setPriceRange([0, 500]);
                       updateUrl();
@@ -248,10 +248,10 @@ const Products: React.FC = () => {
               )}
               
               {showNew && (
-                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded-full text-sm font-medium flex items-center">
                   New Arrivals
                   <button
-                    className="ml-2 text-white hover:text-gray-200"
+                    className="ml-2 text-white dark:text-black hover:text-gray-200 dark:hover:text-gray-800"
                     onClick={() => {
                       setShowNew(false);
                       updateUrl();
@@ -263,10 +263,10 @@ const Products: React.FC = () => {
               )}
               
               {showTrending && (
-                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded-full text-sm font-medium flex items-center">
                   Trending
                   <button
-                    className="ml-2 text-white hover:text-gray-200"
+                    className="ml-2 text-white dark:text-black hover:text-gray-200 dark:hover:text-gray-800"
                     onClick={() => {
                       setShowTrending(false);
                       updateUrl();
@@ -279,7 +279,7 @@ const Products: React.FC = () => {
               
               {getActiveFiltersCount() > 0 && (
                 <button
-                  className="text-gray-600 text-sm hover:text-gray-900"
+                  className="text-gray-600 dark:text-gray-400 text-sm hover:text-gray-900 dark:hover:text-white"
                   onClick={handleClearFilters}
                 >
                   Clear All
@@ -290,7 +290,7 @@ const Products: React.FC = () => {
           
           <div className="relative">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
               <div className="relative">
                 <select
                   value={sortOption}
@@ -298,7 +298,7 @@ const Products: React.FC = () => {
                     setSortOption(e.target.value);
                     setTimeout(updateUrl, 0);
                   }}
-                  className="appearance-none bg-white border border-gray-200 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:border-black"
+                  className="appearance-none bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-4 pr-10 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
                 >
                   <option value="featured">Featured</option>
                   <option value="price-asc">Price: Low to High</option>
@@ -306,7 +306,7 @@ const Products: React.FC = () => {
                   <option value="newest">Newest</option>
                   <option value="rating">Best Rating</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400">
                   <ChevronDown size={16} />
                 </div>
               </div>
