@@ -58,20 +58,20 @@ const Home: React.FC = () => {
       <section className="relative h-screen flex items-center">
         <div className="absolute inset-0">
           <img
-            src="https://images.pexels.com/photos/6567607/pexels-photo-6567607.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="https://images.pexels.com/photos/3747139/pexels-photo-3747139.jpeg?auto=compress&cs=tinysrgb&w=1920"
             alt="Hero background"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Discover Your Perfect Style
+              Tudo para Seu Sucesso
             </h1>
             <p className="text-xl text-gray-200 mb-8">
-              Explore our curated collection of premium products designed to elevate your lifestyle. Quality meets style in every piece.
+              De materiais escolares a gadgets tecnológicos, encontre tudo o que você precisa para estudar, trabalhar e criar em um só lugar.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
@@ -80,7 +80,7 @@ const Home: React.FC = () => {
                 rightIcon={<ArrowRight size={20} />}
                 onClick={() => window.location.href = '/products'}
               >
-                Shop Now
+                Explorar Produtos
               </Button>
               <Button
                 variant="outline"
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
                 className="border-white text-white hover:bg-white hover:text-black"
                 onClick={() => window.location.href = '/about'}
               >
-                Learn More
+                Saiba Mais
               </Button>
             </div>
           </div>
@@ -228,3 +228,5 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+export default Home
