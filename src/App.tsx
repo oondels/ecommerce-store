@@ -17,6 +17,7 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Crochet from "./pages/Crochet";
@@ -58,6 +59,7 @@ function App() {
               <Route path="/products" element={<MainLayout><Products /></MainLayout>} />
               <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
               <Route path="/checkout" element={<MainLayout><Checkout /></MainLayout>} />
+              <Route path="/payment" element={<MainLayout><Payment /></MainLayout>} />
               <Route path="/profile" element={<MainLayout><Profile /></MainLayout>} />
               <Route path="/about" element={<MainLayout><About /></MainLayout>} />
               <Route path="/crochet" element={<MainLayout><Crochet /></MainLayout>} />
