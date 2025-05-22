@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import ProductGrid from '../components/ui/ProductGrid';
@@ -12,7 +12,6 @@ const Products: React.FC = () => {
   const navigate = useNavigate();
   const [isFiltersPanelOpen, setIsFiltersPanelOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -60,8 +59,8 @@ const Products: React.FC = () => {
     return () => clearTimeout(timer);
   }, [location.search]);
   
-  // Apply filters and sort
-  useEffect(() => {
+  // Memoized filtered products
+  const filteredProducts = useMemo(() => {
     let filtered = [...products];
     
     // Filter by category
@@ -124,7 +123,7 @@ const Products: React.FC = () => {
         });
     }
     
-    setFilteredProducts(filtered);
+    return filtered;
   }, [selectedCategory, priceRange, showNew, showTrending, sortOption]);
   
   // Update URL when filters change
@@ -135,8 +134,13 @@ const Products: React.FC = () => {
       params.set('category', selectedCategory);
     }
     
-    params.set('minPrice', priceRange[0].toString());
-    params.set('maxPrice', priceRange[1].toString());
+    if (priceRange[0] > 0) {
+      params.set('minPrice', priceRange[0].toString());
+    }
+    
+    if (priceRange[1] < 500) {
+      params.set('maxPrice', priceRange[1].toString());
+    }
     
     if (showNew) {
       params.set('new', 'true');
@@ -146,7 +150,9 @@ const Products: React.FC = () => {
       params.set('trending', 'true');
     }
     
-    params.set('sort', sortOption);
+    if (sortOption !== 'featured') {
+      params.set('sort', sortOption);
+    }
     
     navigate(`${location.pathname}?${params.toString()}`);
   };
@@ -154,6 +160,7 @@ const Products: React.FC = () => {
   // Handle filter changes
   const handleApplyFilters = () => {
     updateUrl();
+    setIsFiltersPanelOpen(false);
   };
   
   const handleClearFilters = () => {
@@ -162,19 +169,14 @@ const Products: React.FC = () => {
     setShowNew(false);
     setShowTrending(false);
     setSortOption('featured');
-    
     navigate('/products');
-  };
-  
-  const toggleFiltersPanel = () => {
-    setIsFiltersPanelOpen(!isFiltersPanelOpen);
   };
   
   // Get active category name
   const getActiveCategoryName = () => {
-    if (!selectedCategory) return 'Todos os Produtos';
+    if (!selectedCategory) return 'All Products';
     const category = getCategoryBySlug(selectedCategory);
-    return category ? category.name : 'Todos os Produtos';
+    return category ? category.name : 'All Products';
   };
   
   // Count active filters
@@ -193,11 +195,11 @@ const Products: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Page header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-secondary-900">
+          <h1 className="text-3xl font-bold text-gray-900">
             {getActiveCategoryName()}
           </h1>
-          <p className="text-secondary-600 mt-2">
-            Descubra nossa seleção de produtos premium
+          <p className="text-gray-600 mt-2">
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} available
           </p>
         </div>
         
@@ -209,17 +211,17 @@ const Products: React.FC = () => {
               size="md"
               leftIcon={<SlidersHorizontal size={16} />}
               className="lg:hidden"
-              onClick={toggleFiltersPanel}
+              onClick={() => setIsFiltersPanelOpen(true)}
             >
-              Filtros {getActiveFiltersCount() > 0 && `(${getActiveFiltersCount()})`}
+              Filters {getActiveFiltersCount() > 0 && `(${getActiveFiltersCount()})`}
             </Button>
             
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2 flex-wrap">
               {selectedCategory && (
-                <div className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  Categoria: {getActiveCategoryName()}
+                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  Category: {getActiveCategoryName()}
                   <button
-                    className="ml-2 text-primary-500"
+                    className="ml-2 text-white hover:text-gray-200"
                     onClick={() => {
                       setSelectedCategory('');
                       updateUrl();
@@ -231,10 +233,10 @@ const Products: React.FC = () => {
               )}
               
               {(priceRange[0] > 0 || priceRange[1] < 500) && (
-                <div className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  Preço: R${priceRange[0]} - R${priceRange[1]}
+                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  Price: ${priceRange[0]} - ${priceRange[1]}
                   <button
-                    className="ml-2 text-primary-500"
+                    className="ml-2 text-white hover:text-gray-200"
                     onClick={() => {
                       setPriceRange([0, 500]);
                       updateUrl();
@@ -246,10 +248,10 @@ const Products: React.FC = () => {
               )}
               
               {showNew && (
-                <div className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  Novidades
+                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  New Arrivals
                   <button
-                    className="ml-2 text-primary-500"
+                    className="ml-2 text-white hover:text-gray-200"
                     onClick={() => {
                       setShowNew(false);
                       updateUrl();
@@ -261,10 +263,10 @@ const Products: React.FC = () => {
               )}
               
               {showTrending && (
-                <div className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  Tendências
+                <div className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                  Trending
                   <button
-                    className="ml-2 text-primary-500"
+                    className="ml-2 text-white hover:text-gray-200"
                     onClick={() => {
                       setShowTrending(false);
                       updateUrl();
@@ -277,10 +279,10 @@ const Products: React.FC = () => {
               
               {getActiveFiltersCount() > 0 && (
                 <button
-                  className="text-secondary-600 text-sm hover:text-secondary-900"
+                  className="text-gray-600 text-sm hover:text-gray-900"
                   onClick={handleClearFilters}
                 >
-                  Limpar Tudo
+                  Clear All
                 </button>
               )}
             </div>
@@ -288,7 +290,7 @@ const Products: React.FC = () => {
           
           <div className="relative">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-secondary-600">Ordenar por:</span>
+              <span className="text-sm text-gray-600">Sort by:</span>
               <div className="relative">
                 <select
                   value={sortOption}
@@ -296,15 +298,15 @@ const Products: React.FC = () => {
                     setSortOption(e.target.value);
                     setTimeout(updateUrl, 0);
                   }}
-                  className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="appearance-none bg-white border border-gray-200 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:border-black"
                 >
-                  <option value="featured">Destaque</option>
-                  <option value="price-asc">Preço: Menor para Maior</option>
-                  <option value="price-desc">Preço: Maior para Menor</option>
-                  <option value="newest">Mais Recentes</option>
-                  <option value="rating">Melhor Avaliados</option>
+                  <option value="featured">Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="newest">Newest</option>
+                  <option value="rating">Best Rating</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary-500">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                   <ChevronDown size={16} />
                 </div>
               </div>
@@ -354,7 +356,7 @@ const Products: React.FC = () => {
             <ProductGrid
               products={filteredProducts}
               isLoading={isLoading}
-              emptyMessage="Nenhum produto corresponde aos filtros selecionados. Tente ajustar seus critérios."
+              emptyMessage="No products match your selected filters. Try adjusting your criteria."
             />
           </div>
         </div>
