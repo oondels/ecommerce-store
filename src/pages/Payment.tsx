@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, QrCode, Bank, ChevronLeft, Copy, Shield, Clock } from 'lucide-react';
+import { CreditCard, QrCode, Ban as Bank, ChevronLeft, Copy, Shield, Clock } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useCart } from '../context/CartContext';
 import { formatCurrency } from '../utils/formatCurrency';
