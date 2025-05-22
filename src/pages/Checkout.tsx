@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, CreditCard, Wallet, Ban as Bank, Lock, Info } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { CreditCard, QrCode, Ban as Bank, Lock, Info } from 'lucide-react';
 import Button from '../components/ui/Button';
+import { useCart } from '../context/CartContext';
 import { formatCurrency } from '../utils/formatCurrency';
 
 interface PaymentMethod {
   id: string;
-  type: 'card' | 'digital_wallet' | 'bank_transfer';
-  title: string;
+  type: 'card' | 'pix' | 'bank_transfer';
+  name: string;
   icon: React.ReactNode;
   description: string;
 }
@@ -17,23 +17,23 @@ const paymentMethods: PaymentMethod[] = [
   {
     id: 'card',
     type: 'card',
-    title: 'Credit / Debit Card',
+    name: 'Cartão de Crédito/Débito',
     icon: <CreditCard className="w-6 h-6" />,
-    description: 'Pay securely with your credit or debit card',
+    description: 'Pague com seu cartão em até 12x',
   },
   {
-    id: 'digital_wallet',
-    type: 'digital_wallet',
-    title: 'Digital Wallet',
-    icon: <Wallet className="w-6 h-6" />,
-    description: 'Pay with your preferred digital wallet',
+    id: 'pix',
+    type: 'pix',
+    name: 'PIX',
+    icon: <QrCode className="w-6 h-6" />,
+    description: 'Pagamento instantâneo',
   },
   {
     id: 'bank_transfer',
     type: 'bank_transfer',
-    title: 'Bank Transfer',
+    name: 'Transferência Bancária',
     icon: <Bank className="w-6 h-6" />,
-    description: 'Pay directly from your bank account',
+    description: 'Transferência entre contas',
   },
 ];
 
@@ -42,30 +42,12 @@ const Checkout: React.FC = () => {
   const { items, subtotal, shipping, tax, total } = useCart();
   const [selectedMethod, setSelectedMethod] = useState<string>('card');
   const [cardNumber, setCardNumber] = useState('');
+  const [cardName, setCardName] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
-  const [name, setName] = useState('');
-  const [saveCard, setSaveCard] = useState(false);
+  const [installments, setInstallments] = useState('1');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsProcessing(true);
-
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Navigate to success page
-      navigate('/checkout/success');
-    } catch (err) {
-      setError('Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -90,6 +72,27 @@ const Checkout: React.FC = () => {
       return `${v.slice(0, 2)}/${v.slice(2, 4)}`;
     }
     return v;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsProcessing(true);
+
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      if (selectedMethod === 'pix') {
+        navigate('/payment');
+      } else {
+        navigate('/checkout/success');
+      }
+    } catch (err) {
+      setError('Payment failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -146,7 +149,7 @@ const Checkout: React.FC = () => {
                         <div className="flex items-center gap-3">
                           {method.icon}
                           <div>
-                            <p className="font-medium text-gray-900">{method.title}</p>
+                            <p className="font-medium text-gray-900">{method.name}</p>
                             <p className="text-sm text-gray-500">{method.description}</p>
                           </div>
                         </div>
@@ -155,7 +158,7 @@ const Checkout: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Card Details Form */}
+                {/* Credit Card Form */}
                 {selectedMethod === 'card' && (
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -169,13 +172,27 @@ const Checkout: React.FC = () => {
                           onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                           maxLength={19}
                           placeholder="1234 5678 9012 3456"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-black focus:border-black"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-black focus:border-black"
                           required
                         />
                         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                           <Lock className="w-5 h-5 text-gray-400" />
                         </div>
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Name on Card
+                      </label>
+                      <input
+                        type="text"
+                        value={cardName}
+                        onChange={(e) => setCardName(e.target.value)}
+                        placeholder="JOHN DOE"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-black focus:border-black"
+                        required
+                      />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -189,7 +206,7 @@ const Checkout: React.FC = () => {
                           onChange={(e) => setExpiryDate(formatExpiryDate(e.target.value))}
                           maxLength={5}
                           placeholder="MM/YY"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-black focus:border-black"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-black focus:border-black"
                           required
                         />
                       </div>
@@ -211,7 +228,7 @@ const Checkout: React.FC = () => {
                           onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
                           maxLength={4}
                           placeholder="123"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-black focus:border-black"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-black focus:border-black"
                           required
                         />
                       </div>
@@ -219,52 +236,82 @@ const Checkout: React.FC = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Name on Card
+                        Installments
                       </label>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="John Doe"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-black focus:border-black"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="save_card"
-                        checked={saveCard}
-                        onChange={(e) => setSaveCard(e.target.checked)}
-                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
-                      />
-                      <label htmlFor="save_card" className="ml-2 text-sm text-gray-600">
-                        Save card for future payments
-                      </label>
+                      <select
+                        value={installments}
+                        onChange={(e) => setInstallments(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-black focus:border-black"
+                      >
+                        <option value="1">1x of {formatCurrency(total)}</option>
+                        <option value="2">2x of {formatCurrency(total / 2)}</option>
+                        <option value="3">3x of {formatCurrency(total / 3)}</option>
+                        <option value="4">4x of {formatCurrency(total / 4)}</option>
+                        <option value="5">5x of {formatCurrency(total / 5)}</option>
+                        <option value="6">6x of {formatCurrency(total / 6)}</option>
+                      </select>
                     </div>
 
                     {error && (
                       <div className="text-red-600 text-sm">{error}</div>
                     )}
+
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="lg"
+                      fullWidth
+                      isLoading={isProcessing}
+                    >
+                      {isProcessing ? 'Processing...' : `Pay ${formatCurrency(total)}`}
+                    </Button>
                   </form>
                 )}
 
-                {/* Digital Wallet Form */}
-                {selectedMethod === 'digital_wallet' && (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">
-                      You will be redirected to your digital wallet to complete the payment.
+                {/* PIX Payment */}
+                {selectedMethod === 'pix' && (
+                  <div className="text-center">
+                    <p className="text-gray-600 mb-6">
+                      Click the button below to proceed to the PIX payment screen where you'll receive a QR code and payment instructions.
                     </p>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      fullWidth
+                      onClick={handleSubmit}
+                      isLoading={isProcessing}
+                    >
+                      {isProcessing ? 'Processing...' : 'Continue to PIX Payment'}
+                    </Button>
                   </div>
                 )}
 
-                {/* Bank Transfer Form */}
+                {/* Bank Transfer */}
                 {selectedMethod === 'bank_transfer' && (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">
-                      You will receive bank transfer instructions after placing the order.
+                  <div className="space-y-6">
+                    <div className="bg-gray-50 p-6 rounded-xl">
+                      <h3 className="font-medium text-gray-900 mb-4">
+                        Bank Transfer Details
+                      </h3>
+                      <div className="space-y-3 text-sm">
+                        <p><strong>Bank:</strong> 001 - Banco do Brasil</p>
+                        <p><strong>Agency:</strong> 1234-5</p>
+                        <p><strong>Account:</strong> 12345-6</p>
+                        <p><strong>CNPJ:</strong> 12.345.678/0001-90</p>
+                        <p><strong>Amount:</strong> {formatCurrency(total)}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      After making the transfer, please submit your receipt for validation
                     </p>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      fullWidth
+                      onClick={() => window.location.href = '/payment/upload'}
+                    >
+                      Submit Transfer Receipt
+                    </Button>
                   </div>
                 )}
               </div>
@@ -298,27 +345,15 @@ const Checkout: React.FC = () => {
                 </div>
               </div>
 
-              <Button
-                variant="primary"
-                size="lg"
-                fullWidth
-                type="submit"
-                onClick={handleSubmit}
-                isLoading={isProcessing}
-              >
-                {isProcessing ? 'Processing...' : `Pay ${formatCurrency(total)}`}
-              </Button>
-
-              <p className="text-sm text-gray-500 text-center mt-4">
-                By placing this order you agree to our{' '}
-                <Link to="/terms" className="text-black hover:underline">
-                  Terms of Service
-                </Link>
-                {' '}and{' '}
-                <Link to="/privacy" className="text-black hover:underline">
-                  Privacy Policy
-                </Link>
-              </p>
+              <div className="bg-gray-50 p-4 rounded-xl">
+                <div className="flex items-center gap-3 text-sm text-gray-600">
+                  <Lock size={20} className="text-green-500" />
+                  <div>
+                    <p className="font-medium text-gray-900">Secure Payment</p>
+                    <p>Your information is protected</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
