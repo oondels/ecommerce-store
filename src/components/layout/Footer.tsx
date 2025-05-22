@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-secondary-900 text-white pt-12 md:pt-16">
+    <footer className="bg-black text-white pt-12 md:pt-16">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info */}
@@ -20,13 +20,13 @@ const Footer: React.FC = () => {
               Descubra tudo em um só lugar. Loja traz para você produtos cuidadosamente selecionados que combinam beleza, funcionalidade e inovação.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors" aria-label="Facebook">
+              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors" aria-label="Facebook">
                 <MessageCircleMoreIcon size={20} />
               </a>
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors" aria-label="Instagram">
+              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-gray-300 hover:text-primary-400 transition-colors" aria-label="Twitter">
+              <a href="#" className="text-gray-400 hover:text-primary-400 transition-colors" aria-label="Twitter">
                 <Twitter size={20} />
               </a>
             </div>
@@ -37,19 +37,19 @@ const Footer: React.FC = () => {
             <h3 className="text-white font-semibold mb-6">Links Rápidos</h3>
             <ul className="space-y-4">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-primary-400 transition-colors">Início</Link>
+                <Link to="/" className="text-gray-400 hover:text-primary-400 transition-colors">Início</Link>
               </li>
               <li>
-                <Link to="/products" className="text-gray-300 hover:text-primary-400 transition-colors">Produtos</Link>
+                <Link to="/products" className="text-gray-400 hover:text-primary-400 transition-colors">Produtos</Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-primary-400 transition-colors">Sobre Nós</Link>
+                <Link to="/about" className="text-gray-400 hover:text-primary-400 transition-colors">Sobre Nós</Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-primary-400 transition-colors">Contato</Link>
+                <Link to="/contact" className="text-gray-400 hover:text-primary-400 transition-colors">Contato</Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-300 hover:text-primary-400 transition-colors">Perguntas Frequentes</Link>
+                <Link to="/faq" className="text-gray-400 hover:text-primary-400 transition-colors">Perguntas Frequentes</Link>
               </li>
             </ul>
           </div>
@@ -60,15 +60,15 @@ const Footer: React.FC = () => {
             <ul className="space-y-4">
               <li className="flex">
                 <MapPin size={20} className="text-primary-400 mr-3 flex-shrink-0" />
-                <span className="text-gray-300">Rua Pedro de Souza Gomes, 295, Santo Estêvão, SP 44190-000</span>
+                <span className="text-gray-400">Rua Pedro de Souza Gomes, 295, Santo Estêvão, SP 44190-000</span>
               </li>
               <li className="flex">
                 <Phone size={20} className="text-primary-400 mr-3 flex-shrink-0" />
-                <span className="text-gray-300">(75) 98246-6703</span>
+                <span className="text-gray-400">(75) 98246-6703</span>
               </li>
               <li className="flex">
                 <Mail size={20} className="text-primary-400 mr-3 flex-shrink-0" />
-                <span className="text-gray-300">hendriusfelix@gmail.com</span>
+                <span className="text-gray-400">hendriusfelix@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
         
-        <hr className="border-secondary-800 my-8" />
+        <hr className="border-gray-800 my-8" />
         
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center pb-8">
