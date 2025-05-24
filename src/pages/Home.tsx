@@ -81,7 +81,7 @@ const Home: React.FC = () => {
       <section className="relative h-screen flex items-center">
         <div className="absolute inset-0">
           <img
-            src="https://images.pexels.com/photos/5632398/pexels-photo-5632398.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            src="/imgs/bg.png"
             alt="Hero background"
             className="w-full h-full object-cover"
           />

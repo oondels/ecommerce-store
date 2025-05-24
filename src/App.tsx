@@ -46,7 +46,7 @@ function App() {
         <CartProvider>
           <WishlistProvider>
             <Router>
-              <Routes>
+              <Routes> 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/admin" element={<AdminLayout />}>
