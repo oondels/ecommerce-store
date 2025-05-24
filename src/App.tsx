@@ -8,6 +8,7 @@ import Header from "./components/layout/Header";
 import FloatingMenu from "./components/layout/FloatingMenu";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
 import AdminProducts from "./pages/AdminProducts";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
@@ -58,6 +59,7 @@ function App() {
                 </Route>
                 <Route path="/" element={<MainLayout><Home /></MainLayout>} />
                 <Route path="/products" element={<MainLayout><Products /></MainLayout>} />
+                <Route path="/product/:id" element={<MainLayout><ProductDetail /></MainLayout>} />
                 <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
                 <Route path="/checkout" element={<MainLayout><Checkout /></MainLayout>} />
                 <Route path="/payment" element={<MainLayout><Payment /></MainLayout>} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag } from 'lucide-react';
 import RatingStars from './RatingStars';
 import { Product } from '../../types';
@@ -13,6 +13,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist();
   
@@ -44,6 +45,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
     }
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(`/product/${product.id}`);
+  };
+
   const cardClasses = {
     sm: 'max-w-[200px]',
     md: 'max-w-[280px]',
@@ -57,9 +63,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
   };
 
   return (
-    <Link 
-      to={`/product/${product.id}`}
-      className={`group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl ${cardClasses[size]}`}
+    <div 
+      onClick={handleClick}
+      className={`group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer ${cardClasses[size]}`}
     >
       <div className="relative">
         <div className={`overflow-hidden ${imageHeightClasses[size]}`}>
@@ -133,7 +139,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, size = 'md' }) => {
           </button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
