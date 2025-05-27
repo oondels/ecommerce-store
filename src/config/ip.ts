@@ -1,0 +1,1 @@
+export const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'http://82.29.56.105';

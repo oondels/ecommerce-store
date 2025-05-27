@@ -81,11 +81,8 @@ export interface UserAddress {
 
 export interface User {
   id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  addresses: UserAddress[];
-  orders: Order[];
+  name: string;
+  role: string
 }
 
 export interface OrderItem {

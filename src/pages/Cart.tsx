@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, Plus, Minus, X, Heart, ArrowRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useNotifications } from '../context/NotificationsContext';
 import Button from '../components/ui/Button';
 import { formatCurrency } from '../utils/formatCurrency';
 import ProductCard from '../components/ui/ProductCard';
@@ -10,7 +11,7 @@ import { getTrendingProducts } from '../data/mockData';
 
 const Cart: React.FC = () => {
   const { items, updateQuantity, removeFromCart, subtotal, shipping, tax, total } = useCart();
-  const { addToWishlist, isInWishlist } = useWishlist();
+  const { addToWishlist, isInWishlist } = useWishlist();  const { addNotification } = useNotifications();
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState<string | null>(null);
   
@@ -19,12 +20,34 @@ const Cart: React.FC = () => {
   const handleQuantityChange = (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     updateQuantity(id, newQuantity);
+    
+    const item = items.find(item => item.id === id);
+    if (item && newQuantity > 1) {
+      addNotification({
+        type: 'info',
+        title: 'Quantity Updated',
+        message: `${item.name} quantity updated to ${newQuantity}`,
+        duration: 3000,
+      });
+    }
   };
   
   const handleRemoveItem = async (id: string) => {
     setIsRemoving(id);
     await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    
+    const item = items.find(item => item.id === id);
     removeFromCart(id);
+    
+    if (item) {
+      addNotification({
+        type: 'success',
+        title: 'Item Removed',
+        message: `${item.name} has been removed from your cart`,
+        duration: 5000,
+      });
+    }
+    
     setIsRemoving(null);
   };
   
@@ -39,6 +62,20 @@ const Cart: React.FC = () => {
         addedAt: new Date().toISOString(),
       });
       removeFromCart(id);
+      
+      addNotification({
+        type: 'success',
+        title: 'Saved For Later',
+        message: `${item.name} has been moved to your wishlist`,
+        duration: 5000,
+        action: {
+          label: 'View Wishlist',
+          onClick: () => {
+            // Navigate to wishlist
+            window.location.href = '/wishlist';
+          },
+        },
+      });
     }
     setIsSaving(null);
   };

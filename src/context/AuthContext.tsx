@@ -1,17 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'editor' | 'support';
-  avatar?: string;
-}
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { User } from "../types";
+import { AuthService } from "../services/AuthService";
+import { useNotifications } from "../context/NotificationsContext";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (token: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -23,57 +17,75 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 });
 
-export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const navigate = useNavigate();
+
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     // Check for existing session
-    const savedUser = localStorage.getItem('lunora-admin-user');
+    const savedUser = localStorage.getItem("store-user");
+
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (token: string) => {
     try {
-      console.log(password);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
-        name: 'Admin User',
-        email: email,
-        role: 'admin',
-        avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150',
+      const payloadBase64 = token.split(".")[1];
+      const decodedPayload = JSON.parse(atob(payloadBase64));
+
+      const userData: User = {
+        id: decodedPayload.id,
+        name: decodedPayload.name,
+        role: decodedPayload.role,
       };
-      
-      setUser(mockUser);
-      localStorage.setItem('lunora-admin-user', JSON.stringify(mockUser));
-      // navigate('/');
+
+      setUser(userData);
+      localStorage.setItem("store-user", JSON.stringify(userData));
     } catch (error) {
-      console.error('Login failed:', error);
-      
-      throw new Error('Invalid credentials');
+      console.error("Erro ao decodificar token:", error);
+      throw error;
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('lunora-admin-user');
-    // navigate('/login');
+  const logout = async () => {
+    try {
+      await AuthService.logout();
+      setUser(null);
+
+      addNotification({
+        type: "success",
+        title: "Até breve!",
+        message: "Logout realizado com sucesso.",
+        duration: 1500,
+      });
+      localStorage.removeItem("store-user");
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      addNotification({
+        type: "error",
+        title: "Erro ao sair da conta!",
+        message: "Logout não realizado.",
+        duration: 5000,
+      });
+    }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout, isLoading }}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

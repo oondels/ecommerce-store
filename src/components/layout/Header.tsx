@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from '../ui/ThemeToggle';
 
+
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,7 +50,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white dark:bg-gray-950 ${
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-white dark:bg-gray-950 ${
         isScrolled ? 'shadow-soft' : ''
       }`}
     >
@@ -139,13 +140,13 @@ const Header: React.FC = () => {
                         to="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
-                        Profile
+                        Perfil
                       </Link>
                       <Link
                         to="/orders"
                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
-                        Orders
+                        Pedidos
                       </Link>
                       <Link
                         to="/settings"
@@ -157,7 +158,7 @@ const Header: React.FC = () => {
                         onClick={logout}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
-                        Logout
+                        Sair
                       </button>
                     </>
                   ) : (
@@ -245,7 +246,7 @@ const Header: React.FC = () => {
                   className="block text-lg font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Orders
+                  Pedidos
                 </Link>
                 <button
                   onClick={() => {
@@ -254,7 +255,7 @@ const Header: React.FC = () => {
                   }}
                   className="block text-lg font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 >
-                  Logout
+                  Sair
                 </button>
               </>
             ) : (
@@ -271,7 +272,7 @@ const Header: React.FC = () => {
                   className="block text-lg font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Register
+                  Registrar
                 </Link>
               </>
             )}
