@@ -5,7 +5,7 @@ type QueueItem = {
   reject: () => void
 }
 
-export function attachInterceptors(api: AxiosInstance, apiAuth: AxiosInstance) {
+export function attachInterceptors(api: AxiosInstance) {
   let isRefreshing: boolean = false;
   let queue: QueueItem[] = []
 
@@ -13,7 +13,7 @@ export function attachInterceptors(api: AxiosInstance, apiAuth: AxiosInstance) {
     return new Promise<void>((resolve, reject) => queue.push({ resolve, reject }))
   }
 
-  async function handle401(error: any, instance: AxiosInstance, authInstance: AxiosInstance) {
+  async function handle401(error: any, instance: AxiosInstance) {
     const original = error.config;
     if (error.response?.status !== 401 || original._retry) throw error;
 
@@ -27,7 +27,7 @@ export function attachInterceptors(api: AxiosInstance, apiAuth: AxiosInstance) {
     try {
       console.log("Token expirado, atualizando token...");
 
-      const response = await authInstance.post("/auth/token/refresh", null, {
+      const response = await instance.post("/api/auth/refreshToken", null, {
         withCredentials: true
       });
 
@@ -46,7 +46,7 @@ export function attachInterceptors(api: AxiosInstance, apiAuth: AxiosInstance) {
         console.error("Sessão expirada. Você precisa fazer login novamente!");
 
         setTimeout(() => {
-          sessionStorage.clear()
+          localStorage.clear()
           window.location.reload()
         }, 3000);
       } else {
@@ -58,37 +58,33 @@ export function attachInterceptors(api: AxiosInstance, apiAuth: AxiosInstance) {
     }
   }
 
-  api.interceptors.request.use(async (config) => {
-    if (
-      !isRefreshing && !config.url?.includes("/auth/token/refresh")
-    ) {
-      console.log("Token proximo de expirar, atualizando...");
-      isRefreshing = true
+  //! Fix this
+  // api.interceptors.request.use(async (config) => {
+  //   if (
+  //     !isRefreshing && !config.url?.includes("/api/auth/refreshToken")
+  //   ) {
+  //     console.log("Token proximo de expirar, atualizando...");
+  //     isRefreshing = true
 
-      try {
-        const response = await apiAuth.post("/auth/token/refresh", null, {
-          withCredentials: true
-        })
-        sessionStorage.setItem("expirationTime", response.data.tokenExpirationTime)
-      } catch (error) {
-        console.warn("Falha no refresh token:", error);
+  //     try {
+  //       const response = await api.post("/api/auth/refreshToken", null, {
+  //         withCredentials: true
+  //       })
+  //       sessionStorage.setItem("expirationTime", response.data.tokenExpirationTime)
+  //     } catch (error) {
+  //       console.warn("Falha no refresh token:", error);
 
-      } finally {
-        isRefreshing = false
-      }
-    }
+  //     } finally {
+  //       isRefreshing = false
+  //     }
+  //   }
 
-    return config
-  })
+  //   return config
+  // })
 
   api.interceptors.response.use(
     (res) => res,
-    (err) => handle401(err, api, apiAuth)
-  );
-
-  apiAuth.interceptors.response.use(
-    (res) => res,
-    (err) => handle401(err, apiAuth, apiAuth)
+    (err) => handle401(err, api)
   );
 
   return false;

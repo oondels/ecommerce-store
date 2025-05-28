@@ -82,7 +82,8 @@ export interface UserAddress {
 export interface User {
   id: string;
   name: string;
-  role: string
+  role: string;
+  avatar?: string;
 }
 
 export interface OrderItem {

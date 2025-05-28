@@ -1,6 +1,5 @@
-import axios from "axios";
-import { baseUrl } from "../config/ip";
 import { User } from "../types/index"
+import { api } from "./httpClient";
 
 
 // TODO: import 'User' type from the correct path
@@ -9,7 +8,7 @@ export class AuthService {
   public static async register({ name, email, password, confirmPassword }:
     { name: string; email: string; password: string; confirmPassword: string; }): Promise<any> {
     try {
-      const response = await axios.post(`${baseUrl}:2321/api/users/register`, {
+      const response = await api.post(`/api/users/register`, {
         name,
         email,
         password,
@@ -26,7 +25,7 @@ export class AuthService {
 
   public static async login(emailUser: string, password: string) {
     try {
-      const response = await axios.post(`${baseUrl}:2321/api/auth/login`, {
+      const response = await api.post(`/api/auth/login`, {
         emailUser,
         password
       }, {
@@ -45,7 +44,7 @@ export class AuthService {
 
   public static async logout(): Promise<void> {
     try {
-      await axios.post(`${baseUrl}:2321/api/auth/logout`, {}, {
+      await api.post(`/api/auth/logout`, {}, {
         withCredentials: true
       });
     } catch (error) {

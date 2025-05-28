@@ -1,16 +1,10 @@
 import axios from "axios"
-const API_URL = 'http://localhost:2399 '
-const AUTH_API_URL = "http://localhost:2321"
+import { baseUrl } from "../config/ip"
 import { attachInterceptors } from "../interceptors/apiInterceptors"
 
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: `${baseUrl}:2321`,
   withCredentials: true
 })
 
-export const authApi = axios.create({
-  baseURL: AUTH_API_URL,
-  withCredentials: true
-})
-
-attachInterceptors(api, authApi)
+attachInterceptors(api)

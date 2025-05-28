@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
   Lock,
   Bell,
   ShoppingBag,
@@ -13,11 +13,12 @@ import {
   ChevronUp,
   Camera,
   Save,
-  X
-} from 'lucide-react';
-import Button from '../components/ui/Button';
-import { useAuth } from '../context/AuthContext';
-import { useNotifications } from '../context/NotificationsContext';
+  X,
+} from "lucide-react";
+import Button from "../components/ui/Button";
+import { useAuth } from "../context/AuthContext";
+import { useNotifications } from "../context/NotificationsContext";
+import { UserService } from "../services/UserService";
 
 interface Section {
   id: string;
@@ -28,41 +29,52 @@ interface Section {
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const { addNotification } = useNotifications();
-  const [expandedSection, setExpandedSection] = useState<string | null>('personal');
+  const [expandedSection, setExpandedSection] = useState<string | null>("personal");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  
-  const [formData, setFormData] = useState({
-    fullName: user?.name || '',
-    email: '',
-    phone: '',
-    birthDate: '',
-    username: '',
-    cpf: '',
-    addressLine1: '',
-    addressLine2: '',
-    postalCode: '',
-    city: '',
-    state: '',
-    country: '',
+
+  const formDataDto = {
+    name: user?.name || "",
+    email: "",
+    phone: "",
+    birth: "",
+    username: "",
+    cpf: "",
+    addressLine1: "",
+    addressLine2: "",
+    postalCode: "",
+    city: "",
+    state: "",
+    country: "",
     emailNotifications: true,
     whatsappNotifications: true,
     smsNotifications: false,
     marketingEmails: true,
-  });
+  }
+  const [formData, setFormData] = useState(formDataDto);
 
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
+
+  // Loads user data when the component mounts or when the user ID changes
+  useEffect(() => {
+    if (user?.id) {
+      UserService.getUserById(user.id).then((userData) => {
+        setFormData(userData);
+      });
+    }
+  }, [user?.id]);
+
   const sections: Section[] = [
-    { id: 'personal', title: 'Personal Information', icon: <User size={20} /> },
-    { id: 'security', title: 'Security Settings', icon: <Lock size={20} /> },
-    { id: 'address', title: 'Address & Delivery', icon: <MapPin size={20} /> },
-    { id: 'notifications', title: 'Notifications', icon: <Bell size={20} /> },
-    { id: 'orders', title: 'Recent Orders', icon: <ShoppingBag size={20} /> },
+    { id: "personal", title: "Informações Pessoais", icon: <User size={20} /> },
+    { id: "security", title: "Configurações de Segurança", icon: <Lock size={20} /> },
+    { id: "address", title: "Endereço e Entrega", icon: <MapPin size={20} /> },
+    { id: "notifications", title: "Notificações", icon: <Bell size={20} /> },
+    { id: "orders", title: "Pedidos Recentes", icon: <ShoppingBag size={20} /> },
   ];
 
   const toggleSection = (sectionId: string) => {
@@ -71,25 +83,25 @@ const Profile: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({
+    setPasswordData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSaveChanges = () => {
     addNotification({
-      type: 'success',
-      title: 'Profile Updated',
-      message: 'Your profile has been successfully updated.',
+      type: "success",
+      title: "Perfil Atualizado",
+      message: "Seu perfil foi atualizado com sucesso.",
       duration: 3000,
     });
     setIsEditing(false);
@@ -99,9 +111,9 @@ const Profile: React.FC = () => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       addNotification({
-        type: 'error',
-        title: 'Password Error',
-        message: 'New passwords do not match.',
+        type: "error",
+        title: "Erro de Senha",
+        message: "As novas senhas não coincidem.",
         duration: 3000,
       });
       return;
@@ -109,9 +121,9 @@ const Profile: React.FC = () => {
     // Handle password update logic here
     setShowPasswordModal(false);
     addNotification({
-      type: 'success',
-      title: 'Password Updated',
-      message: 'Your password has been successfully changed.',
+      type: "success",
+      title: "Senha Atualizada",
+      message: "Sua senha foi alterada com sucesso.",
       duration: 3000,
     });
   };
@@ -123,27 +135,18 @@ const Profile: React.FC = () => {
           {/* Profile Header */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Meu Perfil</h1>
               {!isEditing ? (
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditing(true)}
-                >
-                  Edit Profile
+                <Button variant="outline" onClick={() => setIsEditing(true)}>
+                  Editar Perfil
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsEditing(false)}
-                  >
-                    Cancel
+                  <Button variant="outline" onClick={() => setIsEditing(false)}>
+                    Cancelar
                   </Button>
-                  <Button
-                    variant="primary"
-                    onClick={handleSaveChanges}
-                  >
-                    Save Changes
+                  <Button variant="primary" onClick={handleSaveChanges}>
+                    Salvar Alterações
                   </Button>
                 </div>
               )}
@@ -153,8 +156,8 @@ const Profile: React.FC = () => {
               <div className="relative">
                 <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
                   <img
-                    src={user?.avatar || 'https://via.placeholder.com/150'}
-                    alt="Profile"
+                    src={user?.avatar || "https://via.placeholder.com/150"}
+                    alt="Foto de perfil do usuário"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -165,12 +168,8 @@ const Profile: React.FC = () => {
                 )}
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {user?.name}
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Member since {new Date().getFullYear()}
-                </p>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{user?.name}</h2>
+                <p className="text-gray-500 dark:text-gray-400">Membro desde {new Date().getFullYear()}</p>
               </div>
             </div>
           </div>
@@ -184,9 +183,7 @@ const Profile: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   {section.icon}
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {section.title}
-                  </span>
+                  <span className="font-medium text-gray-900 dark:text-white">{section.title}</span>
                 </div>
                 {expandedSection === section.id ? (
                   <ChevronUp size={20} className="text-gray-400" />
@@ -197,17 +194,17 @@ const Profile: React.FC = () => {
 
               {expandedSection === section.id && (
                 <div className="px-6 pb-6">
-                  {section.id === 'personal' && (
+                  {section.id === "personal" && (
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Full Name
+                            Nome Completo
                           </label>
                           <input
                             type="text"
                             name="fullName"
-                            value={formData.fullName}
+                            value={formData.name || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -220,7 +217,7 @@ const Profile: React.FC = () => {
                           <input
                             type="email"
                             name="email"
-                            value={formData.email}
+                            value={formData.email || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -228,12 +225,12 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Phone (optional)
+                            Telefone
                           </label>
                           <input
                             type="tel"
                             name="phone"
-                            value={formData.phone}
+                            value={formData.phone|| ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -241,12 +238,12 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Birth Date (optional)
+                            Data de Aniversário
                           </label>
                           <input
                             type="date"
                             name="birthDate"
-                            value={formData.birthDate}
+                            value={formData.birth || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -254,25 +251,23 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Username (optional)
+                            Nome de usuário
                           </label>
                           <input
                             type="text"
                             name="username"
-                            value={formData.username}
+                            value={formData.username || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            CPF (optional)
-                          </label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF</label>
                           <input
                             type="text"
                             name="cpf"
-                            value={formData.cpf}
+                            value={formData.cpf || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -282,31 +277,28 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
-                  {section.id === 'security' && (
+                  {section.id === "security" && (
                     <div className="space-y-4">
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Manage your password and account security settings.
+                        Gerencie sua senha e configurações de segurança da conta.
                       </p>
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowPasswordModal(true)}
-                      >
-                        Change Password
+                      <Button variant="outline" onClick={() => setShowPasswordModal(true)}>
+                        Alterar Senha
                       </Button>
                     </div>
                   )}
 
-                  {section.id === 'address' && (
+                  {section.id === "address" && (
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Address Line 1
+                            Endereço 1
                           </label>
                           <input
                             type="text"
                             name="addressLine1"
-                            value={formData.addressLine1}
+                            value={formData.addressLine1 || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -314,12 +306,12 @@ const Profile: React.FC = () => {
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Address Line 2 (optional)
+                            Endereço 2
                           </label>
                           <input
                             type="text"
                             name="addressLine2"
-                            value={formData.addressLine2}
+                            value={formData.addressLine2 || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -327,12 +319,12 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Postal Code
+                            Código Postal (CEP)
                           </label>
                           <input
                             type="text"
                             name="postalCode"
-                            value={formData.postalCode}
+                            value={formData.postalCode || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -340,25 +332,25 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            City
+                            Cidade
                           </label>
                           <input
                             type="text"
                             name="city"
-                            value={formData.city}
-                            onChange={handleInputChange}
+                            value={formData.city || ""}
+                            onChange={handleInputChange }
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            State
+                            Estado
                           </label>
                           <input
                             type="text"
                             name="state"
-                            value={formData.state}
+                            value={formData.state || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -366,12 +358,12 @@ const Profile: React.FC = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Country
+                            País
                           </label>
                           <input
                             type="text"
                             name="country"
-                            value={formData.country}
+                            value={formData.country || ""}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
@@ -381,76 +373,63 @@ const Profile: React.FC = () => {
                     </div>
                   )}
 
-                  {section.id === 'notifications' && (
+                  {section.id === "notifications" && (
                     <div className="space-y-4">
                       <div className="space-y-3">
                         <label className="flex items-center space-x-3">
                           <input
                             type="checkbox"
                             name="emailNotifications"
-                            checked={formData.emailNotifications}
+                            checked={formData.emailNotifications || false}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                           />
-                          <span className="text-gray-700 dark:text-gray-300">
-                            Email Notifications
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-300">Notificações por email</span>
                         </label>
                         <label className="flex items-center space-x-3">
                           <input
                             type="checkbox"
                             name="whatsappNotifications"
-                            checked={formData.whatsappNotifications}
+                            checked={formData.whatsappNotifications || false}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                           />
-                          <span className="text-gray-700 dark:text-gray-300">
-                            WhatsApp Notifications
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-300">Notificações por WhatsApp</span>
                         </label>
                         <label className="flex items-center space-x-3">
                           <input
                             type="checkbox"
                             name="smsNotifications"
-                            checked={formData.smsNotifications}
+                            checked={formData.smsNotifications || false}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                           />
-                          <span className="text-gray-700 dark:text-gray-300">
-                            SMS Notifications
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-300">Notificações por SMS</span>
                         </label>
                         <label className="flex items-center space-x-3">
                           <input
                             type="checkbox"
                             name="marketingEmails"
-                            checked={formData.marketingEmails}
+                            checked={formData.marketingEmails || false}
                             onChange={handleInputChange}
                             disabled={!isEditing}
                             className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                           />
-                          <span className="text-gray-700 dark:text-gray-300">
-                            Marketing Emails
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-300">Emails de Marketing</span>
                         </label>
                       </div>
                     </div>
                   )}
 
-                  {section.id === 'orders' && (
+                  {section.id === "orders" && (
                     <div className="space-y-4">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        No recent orders found.
-                      </p>
-                      <Link
-                        to="/products"
-                        className="inline-flex items-center text-primary-600 hover:text-primary-700"
-                      >
-                        Start Shopping
-                        <ChevronRight size={16} className="ml-1" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Sem pedidos recentes.</p>
+                      <Link to="/products" className="inline-flex items-center text-primary-600 hover:text-primary-700">
+                        Comece a Comprar
+                        {/* <ChevronRight size={16} className="ml-1" /> */}
                       </Link>
                     </div>
                   )}
@@ -466,21 +445,14 @@ const Profile: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Change Password
-              </h3>
-              <button
-                onClick={() => setShowPasswordModal(false)}
-                className="text-gray-400 hover:text-gray-500"
-              >
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Change Password</h3>
+              <button onClick={() => setShowPasswordModal(false)} className="text-gray-400 hover:text-gray-500">
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Current Password
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha Atual</label>
                 <input
                   type="password"
                   name="currentPassword"
@@ -491,9 +463,7 @@ const Profile: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  New Password
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nova Senha</label>
                 <input
                   type="password"
                   name="newPassword"
@@ -505,7 +475,7 @@ const Profile: React.FC = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Confirm New Password
+                  Confirme Nova Senha
                 </label>
                 <input
                   type="password"
@@ -517,17 +487,11 @@ const Profile: React.FC = () => {
                 />
               </div>
               <div className="flex justify-end gap-3 mt-6">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowPasswordModal(false)}
-                >
-                  Cancel
+                <Button variant="outline" onClick={() => setShowPasswordModal(false)}>
+                  Cancelar
                 </Button>
-                <Button
-                  type="submit"
-                  variant="primary"
-                >
-                  Update Password
+                <Button type="submit" variant="primary">
+                  Atualizar Senha
                 </Button>
               </div>
             </form>

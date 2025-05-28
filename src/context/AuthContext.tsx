@@ -17,6 +17,23 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: true,
 });
 
+function parseJwt(token: string) {
+  try {
+    const base64 = token.split(".")[1];
+    const decodedPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+        .join("")
+    );
+
+    return JSON.parse(decodedPayload);
+  } catch (e) {
+    console.error("Invalid JWT format:", e);
+    return null;
+  }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Check for existing session
-    const savedUser = localStorage.getItem("store-user");
+    const savedUser = sessionStorage.getItem("store-user");
 
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -35,8 +52,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (token: string) => {
     try {
-      const payloadBase64 = token.split(".")[1];
-      const decodedPayload = JSON.parse(atob(payloadBase64));
+      const decodedPayload = parseJwt(token);
+      if (!decodedPayload) {
+        throw new Error("Token inválido ou corrompido");
+      }
 
       const userData: User = {
         id: decodedPayload.id,
@@ -45,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       setUser(userData);
-      localStorage.setItem("store-user", JSON.stringify(userData));
+      sessionStorage.setItem("store-user", JSON.stringify(userData));
     } catch (error) {
       console.error("Erro ao decodificar token:", error);
       throw error;
@@ -65,11 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         message: "Logout realizado com sucesso.",
         duration: 1500,
       });
-      localStorage.removeItem("store-user");
-
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
+      sessionStorage.removeItem("store-user");
     }
   };
 
