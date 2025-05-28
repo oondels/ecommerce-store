@@ -1,390 +1,536 @@
 import React, { useState } from 'react';
-import { MapPin, Mail, Phone, Clock, Settings, Eye, EyeOff, Edit2, Save, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Calendar, 
+  Lock,
+  Bell,
+  ShoppingBag,
+  ChevronDown,
+  ChevronUp,
+  Camera,
+  Save,
+  X
+} from 'lucide-react';
 import Button from '../components/ui/Button';
+import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationsContext';
 
-interface BusinessHours {
-  day: string;
-  open: string;
-  close: string;
-  closed: boolean;
+interface Section {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
 }
 
 const Profile: React.FC = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { user } = useAuth();
+  const { addNotification } = useNotifications();
+  const [expandedSection, setExpandedSection] = useState<string | null>('personal');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [storeData, setStoreData] = useState({
-    name: 'My Store Name',
-    description: 'A premium retail store offering quality products and exceptional service.',
-    email: 'contact@mystore.com',
-    phone: '(555) 123-4567',
-    address: '123 Store Street, City, State 12345',
-    logo: 'https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=150',
-    isPublic: true,
-    offersDelivery: true,
-    isFeatured: false,
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    fullName: user?.name || '',
+    email: '',
+    phone: '',
+    birthDate: '',
+    username: '',
+    cpf: '',
+    addressLine1: '',
+    addressLine2: '',
+    postalCode: '',
+    city: '',
+    state: '',
+    country: '',
+    emailNotifications: true,
+    whatsappNotifications: true,
+    smsNotifications: false,
+    marketingEmails: true,
   });
 
-  const [businessHours, setBusinessHours] = useState<BusinessHours[]>([
-    { day: 'Monday', open: '09:00', close: '18:00', closed: false },
-    { day: 'Tuesday', open: '09:00', close: '18:00', closed: false },
-    { day: 'Wednesday', open: '09:00', close: '18:00', closed: false },
-    { day: 'Thursday', open: '09:00', close: '18:00', closed: false },
-    { day: 'Friday', open: '09:00', close: '18:00', closed: false },
-    { day: 'Saturday', open: '10:00', close: '16:00', closed: false },
-    { day: 'Sunday', open: '00:00', close: '00:00', closed: true },
-  ]);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const sections: Section[] = [
+    { id: 'personal', title: 'Personal Information', icon: <User size={20} /> },
+    { id: 'security', title: 'Security Settings', icon: <Lock size={20} /> },
+    { id: 'address', title: 'Address & Delivery', icon: <MapPin size={20} /> },
+    { id: 'notifications', title: 'Notifications', icon: <Bell size={20} /> },
+    { id: 'orders', title: 'Recent Orders', icon: <ShoppingBag size={20} /> },
+  ];
+
+  const toggleSection = (sectionId: string) => {
+    setExpandedSection(expandedSection === sectionId ? null : sectionId);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setStoreData(prev => ({
+    setPasswordData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleToggleChange = (name: string) => {
-    setStoreData(prev => ({
-      ...prev,
-      [name]: !prev[name as keyof typeof prev]
-    }));
-  };
-
-  const handleHoursChange = (index: number, field: keyof BusinessHours, value: string | boolean) => {
-    const newHours = [...businessHours];
-    newHours[index] = {
-      ...newHours[index],
-      [field]: value
-    };
-    setBusinessHours(newHours);
-  };
-
-  const handleSave = () => {
-    // Here you would typically make an API call to save the changes
+  const handleSaveChanges = () => {
+    addNotification({
+      type: 'success',
+      title: 'Profile Updated',
+      message: 'Your profile has been successfully updated.',
+      duration: 3000,
+    });
     setIsEditing(false);
   };
 
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      addNotification({
+        type: 'error',
+        title: 'Password Error',
+        message: 'New passwords do not match.',
+        duration: 3000,
+      });
+      return;
+    }
+    // Handle password update logic here
+    setShowPasswordModal(false);
+    addNotification({
+      type: 'success',
+      title: 'Password Updated',
+      message: 'Your password has been successfully changed.',
+      duration: 3000,
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {/* Profile Header */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">Store Profile</h1>
-              <div className="flex items-center gap-3">
-                {!isEditing ? (
-                  <Button
-                    variant="outline"
-                    size="md"
-                    leftIcon={<Edit2 size={16} />}
-                    onClick={() => setIsEditing(true)}
-                  >
-                    Edit Profile
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="md"
-                      leftIcon={<X size={16} />}
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      size="md"
-                      leftIcon={<Save size={16} />}
-                      onClick={handleSave}
-                    >
-                      Save Changes
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Store Logo */}
-              <div className="flex-shrink-0">
-                <div className="relative">
-                  <img
-                    src={storeData.logo}
-                    alt="Store Logo"
-                    className="w-32 h-32 rounded-lg object-cover"
-                  />
-                  {isEditing && (
-                    <button className="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-50">
-                      <Edit2 size={16} className="text-gray-600" />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Basic Info */}
-              <div className="flex-1 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Store Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={storeData.name}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    name="description"
-                    value={storeData.description}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Information */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <div className="flex items-center">
-                  <Mail size={16} className="text-gray-400 mr-2" />
-                  <input
-                    type="email"
-                    name="email"
-                    value={storeData.email}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone Number
-                </label>
-                <div className="flex items-center">
-                  <Phone size={16} className="text-gray-400 mr-2" />
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={storeData.phone}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
-                </label>
-                <div className="flex items-center">
-                  <MapPin size={16} className="text-gray-400 mr-2" />
-                  <input
-                    type="text"
-                    name="address"
-                    value={storeData.address}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-50 disabled:text-gray-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Business Hours */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Business Hours</h2>
-              <Clock size={20} className="text-gray-400" />
-            </div>
-            <div className="space-y-3">
-              {businessHours.map((hours, index) => (
-                <div key={hours.day} className="flex items-center gap-4">
-                  <div className="w-32">
-                    <span className="text-sm font-medium text-gray-700">{hours.day}</span>
-                  </div>
-                  <div className="flex items-center gap-2 flex-1">
-                    <input
-                      type="time"
-                      value={hours.open}
-                      onChange={(e) => handleHoursChange(index, 'open', e.target.value)}
-                      disabled={!isEditing || hours.closed}
-                      className="px-2 py-1 border border-gray-300 rounded-md disabled:bg-gray-50"
-                    />
-                    <span className="text-gray-500">to</span>
-                    <input
-                      type="time"
-                      value={hours.close}
-                      onChange={(e) => handleHoursChange(index, 'close', e.target.value)}
-                      disabled={!isEditing || hours.closed}
-                      className="px-2 py-1 border border-gray-300 rounded-md disabled:bg-gray-50"
-                    />
-                    {isEditing && (
-                      <label className="flex items-center gap-2 ml-4">
-                        <input
-                          type="checkbox"
-                          checked={hours.closed}
-                          onChange={(e) => handleHoursChange(index, 'closed', e.target.checked)}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                        />
-                        <span className="text-sm text-gray-600">Closed</span>
-                      </label>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Store Settings */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Store Settings</h2>
-              <Settings size={20} className="text-gray-400" />
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">Public Profile</h3>
-                  <p className="text-sm text-gray-500">Make your store visible to customers</p>
-                </div>
-                <button
-                  onClick={() => isEditing && handleToggleChange('isPublic')}
-                  disabled={!isEditing}
-                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    storeData.isPublic ? 'bg-primary-600' : 'bg-gray-200'
-                  } ${!isEditing && 'cursor-not-allowed opacity-50'}`}
-                >
-                  <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    storeData.isPublic ? 'translate-x-5' : 'translate-x-0'
-                  }`} />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">Delivery Service</h3>
-                  <p className="text-sm text-gray-500">Offer delivery to your customers</p>
-                </div>
-                <button
-                  onClick={() => isEditing && handleToggleChange('offersDelivery')}
-                  disabled={!isEditing}
-                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    storeData.offersDelivery ? 'bg-primary-600' : 'bg-gray-200'
-                  } ${!isEditing && 'cursor-not-allowed opacity-50'}`}
-                >
-                  <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    storeData.offersDelivery ? 'translate-x-5' : 'translate-x-0'
-                  }`} />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">Featured Store</h3>
-                  <p className="text-sm text-gray-500">Display your store in featured listings</p>
-                </div>
-                <button
-                  onClick={() => isEditing && handleToggleChange('isFeatured')}
-                  disabled={!isEditing}
-                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    storeData.isFeatured ? 'bg-primary-600' : 'bg-gray-200'
-                  } ${!isEditing && 'cursor-not-allowed opacity-50'}`}
-                >
-                  <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    storeData.isFeatured ? 'translate-x-5' : 'translate-x-0'
-                  }`} />
-                </button>
-              </div>
-
-              <div className="pt-4 border-t border-gray-200">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+              {!isEditing ? (
                 <Button
                   variant="outline"
-                  size="md"
-                  onClick={() => setShowPasswordModal(true)}
-                  className="text-gray-700"
+                  onClick={() => setIsEditing(true)}
                 >
-                  Change Password
+                  Edit Profile
                 </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={handleSaveChanges}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                  <img
+                    src={user?.avatar || 'https://via.placeholder.com/150'}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {isEditing && (
+                  <button className="absolute bottom-0 right-0 p-2 bg-white dark:bg-gray-700 rounded-full shadow-lg">
+                    <Camera size={16} className="text-gray-600 dark:text-gray-300" />
+                  </button>
+                )}
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  {user?.name}
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Member since {new Date().getFullYear()}
+                </p>
               </div>
             </div>
           </div>
+
+          {/* Profile Sections */}
+          {sections.map((section) => (
+            <div key={section.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+              <button
+                className="w-full px-6 py-4 flex items-center justify-between text-left"
+                onClick={() => toggleSection(section.id)}
+              >
+                <div className="flex items-center space-x-3">
+                  {section.icon}
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    {section.title}
+                  </span>
+                </div>
+                {expandedSection === section.id ? (
+                  <ChevronUp size={20} className="text-gray-400" />
+                ) : (
+                  <ChevronDown size={20} className="text-gray-400" />
+                )}
+              </button>
+
+              {expandedSection === section.id && (
+                <div className="px-6 pb-6">
+                  {section.id === 'personal' && (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Phone (optional)
+                          </label>
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Birth Date (optional)
+                          </label>
+                          <input
+                            type="date"
+                            name="birthDate"
+                            value={formData.birthDate}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Username (optional)
+                          </label>
+                          <input
+                            type="text"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            CPF (optional)
+                          </label>
+                          <input
+                            type="text"
+                            name="cpf"
+                            value={formData.cpf}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {section.id === 'security' && (
+                    <div className="space-y-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Manage your password and account security settings.
+                      </p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowPasswordModal(true)}
+                      >
+                        Change Password
+                      </Button>
+                    </div>
+                  )}
+
+                  {section.id === 'address' && (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Address Line 1
+                          </label>
+                          <input
+                            type="text"
+                            name="addressLine1"
+                            value={formData.addressLine1}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Address Line 2 (optional)
+                          </label>
+                          <input
+                            type="text"
+                            name="addressLine2"
+                            value={formData.addressLine2}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Postal Code
+                          </label>
+                          <input
+                            type="text"
+                            name="postalCode"
+                            value={formData.postalCode}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            City
+                          </label>
+                          <input
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            State
+                          </label>
+                          <input
+                            type="text"
+                            name="state"
+                            value={formData.state}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Country
+                          </label>
+                          <input
+                            type="text"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 disabled:bg-gray-100 dark:disabled:bg-gray-700"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {section.id === 'notifications' && (
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            name="emailNotifications"
+                            checked={formData.emailNotifications}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            Email Notifications
+                          </span>
+                        </label>
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            name="whatsappNotifications"
+                            checked={formData.whatsappNotifications}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            WhatsApp Notifications
+                          </span>
+                        </label>
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            name="smsNotifications"
+                            checked={formData.smsNotifications}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            SMS Notifications
+                          </span>
+                        </label>
+                        <label className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            name="marketingEmails"
+                            checked={formData.marketingEmails}
+                            onChange={handleInputChange}
+                            disabled={!isEditing}
+                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            Marketing Emails
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {section.id === 'orders' && (
+                    <div className="space-y-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        No recent orders found.
+                      </p>
+                      <Link
+                        to="/products"
+                        className="inline-flex items-center text-primary-600 hover:text-primary-700"
+                      >
+                        Start Shopping
+                        <ChevronRight size={16} className="ml-1" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Password Change Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
-            <div className="space-y-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Change Password
+              </h3>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Current Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   New Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Confirm New Password
                 </label>
                 <input
                   type="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  required
                 />
               </div>
               <div className="flex justify-end gap-3 mt-6">
                 <Button
                   variant="outline"
-                  size="md"
                   onClick={() => setShowPasswordModal(false)}
                 >
                   Cancel
                 </Button>
                 <Button
+                  type="submit"
                   variant="primary"
-                  size="md"
-                  onClick={() => {
-                    // Handle password change
-                    setShowPasswordModal(false);
-                  }}
                 >
                   Update Password
                 </Button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
