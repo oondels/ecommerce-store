@@ -5,12 +5,12 @@ import { useNotifications } from "../context/NotificationsContext";
 
 interface AuthContextType {
   user: User | null;
-  login: (token: string) => Promise<void>;
+  login: (token: string) => void;
   logout: () => void;
   isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => {},
   logout: () => {},
@@ -54,9 +54,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await AuthService.logout();
       setUser(null);
-
+      await AuthService.logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
       addNotification({
         type: "success",
         title: "Até breve!",
@@ -68,14 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTimeout(() => {
         window.location.href = "/";
       }, 1500);
-    } catch (error) {
-      console.error("Logout failed:", error);
-      addNotification({
-        type: "error",
-        title: "Erro ao sair da conta!",
-        message: "Logout não realizado.",
-        duration: 5000,
-      });
     }
   };
 
